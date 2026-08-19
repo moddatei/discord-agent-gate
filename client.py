@@ -81,7 +81,19 @@ def format_output(agent_type: str, daemon_response: dict, raw_data: dict) -> dic
             args = tool_call.get("args", {})
             overrides = []
             if name == "run_command" and "CommandLine" in args:
-                overrides.append(f"command({args['CommandLine']})")
+                cmd = args["CommandLine"].strip()
+                overrides.append(f"command({cmd})")
+                base_cmd = cmd.split()[0] if cmd.split() else ""
+                if base_cmd:
+                    overrides.append(f"command({base_cmd})")
+                overrides.append("command(*)")
+            elif name in ("write_to_file", "replace_file_content") and "TargetFile" in args:
+                target_file = args["TargetFile"]
+                overrides.append(f"file_write({target_file})")
+                overrides.append("file_write(*)")
+            elif name:
+                overrides.append(f"{name}(*)")
+                overrides.append("*")
             if overrides:
                 output["permissionOverrides"] = overrides
         return output
