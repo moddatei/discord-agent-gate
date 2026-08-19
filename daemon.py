@@ -152,6 +152,9 @@ class DiscordBridgeDaemon:
 
         view = ApprovalView(asyncio.get_running_loop(), timeout=config.TIMEOUT_SECONDS)
         
+        self.active_view = view
+        self.active_fut = view.decision_fut
+
         content = config.MENTION if config.MENTION else None
         msg = await channel.send(content=content, embed=embed, view=view)
         view.message = msg
@@ -160,6 +163,9 @@ class DiscordBridgeDaemon:
             result = await asyncio.wait_for(view.decision_fut, timeout=config.TIMEOUT_SECONDS + 5)
         except asyncio.TimeoutError:
             result = {"decision": "deny", "reason": "Timeout reached waiting for Discord response."}
+        finally:
+            self.active_view = None
+            self.active_fut = None
 
         return web.json_response(result)
 
