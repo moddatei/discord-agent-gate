@@ -68,8 +68,17 @@ async def verify_discord(token: str, channel_id: int):
             print(f"✅ Logged in as: {client.user}")
             channel = client.get_channel(channel_id)
             if channel:
-                await channel.send("🚀 **Discord Agent Gate is configured and connected!**")
-                print(f"✅ Sent test message to channel #{channel.name} ({channel_id})")
+                embed = discord.Embed(
+                    title="🚀 Discord Agent Gate Connected!",
+                    description="Discord Agent Gate is successfully configured and ready to handle AI agent confirmations.",
+                    color=0x57F287
+                )
+                embed.add_field(name="Status", value="🟢 Online & Listening", inline=True)
+                embed.add_field(name="Target Channel", value=f"#{channel.name}", inline=True)
+                embed.set_footer(text="Made by github.com/moddatei • Discord Agent Gate")
+                embed.set_author(name="Discord Agent Gate", url="https://github.com/moddatei/discord-agent-gate")
+                await channel.send(embed=embed)
+                print(f"✅ Sent test embed to channel #{channel.name} ({channel_id})")
                 success = True
             else:
                 print(f"⚠️ Warning: Could not find channel {channel_id}. Verify bot has access to that channel.")

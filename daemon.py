@@ -138,6 +138,7 @@ class DiscordBridgeDaemon:
             color=embed_color,
             timestamp=datetime.utcnow()
         )
+        embed.set_author(name="Discord Agent Gate", url="https://github.com/moddatei/discord-agent-gate")
         embed.add_field(name="Tool / Operation", value=f"`{tool_name}`", inline=True)
         if workspace:
             embed.add_field(name="Workspace", value=f"`{workspace}`", inline=True)
@@ -147,7 +148,7 @@ class DiscordBridgeDaemon:
             value=f"```yaml\n{args_content}\n```" if args_content else "*No arguments*",
             inline=False
         )
-        embed.set_footer(text=f"Auto-expires in {config.TIMEOUT_SECONDS // 60} min")
+        embed.set_footer(text=f"Auto-expires in {config.TIMEOUT_SECONDS // 60} min • Made by github.com/moddatei")
 
         view = ApprovalView(asyncio.get_running_loop(), timeout=config.TIMEOUT_SECONDS)
         
