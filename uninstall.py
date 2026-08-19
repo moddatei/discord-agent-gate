@@ -57,6 +57,9 @@ def unconfigure_claude_code():
     else:
         print("ℹ️ Claude Code: No Discord PermissionRequest hooks found.")
 
+def unconfigure_codex():
+    print("ℹ️ Codex / Custom Agents: 'codex_helper.py' requires no global hooks to clean.")
+
 def remove_env():
     env_file = Path(__file__).resolve().parent / ".env"
     if env_file.exists():
@@ -69,17 +72,18 @@ def main():
     print("\n" + "#" * 60)
     print("      🗑️  DISCORD AGENT GATE UNINSTALLER")
     print("#" * 60)
-    print("This will remove Discord Gate hooks from your AI agent settings.")
+    print("This will remove Discord Gate hooks from Antigravity, Claude Code & Codex.")
 
     print_header("Removing Agent Hooks")
     unconfigure_antigravity()
     unconfigure_claude_code()
+    unconfigure_codex()
 
     print_header("Local Settings")
     remove_env()
 
     print_header("Uninstall Complete! ✨")
-    print("All agent hooks have been cleanly removed.")
+    print("All agent hooks and settings have been cleanly removed.")
     print("Your agents will now use their default standard terminal prompts.\n")
 
 if __name__ == "__main__":

@@ -151,7 +151,7 @@ If you ever want to remove Discord Agent Gate and restore your agents to their d
 python uninstall.py
 ```
 
-This cleanly removes the hook configurations from Antigravity (`hooks.json`) and Claude Code (`settings.json`) without affecting any of your other custom configurations.
+This cleanly removes the hook configurations from Antigravity (`hooks.json`), Claude Code (`settings.json`), and Codex/custom setups without affecting any of your other custom configurations.
 
 ---
 
