@@ -146,9 +146,9 @@ python codex_helper.py "git push origin main"
 ## 💡 Setting Up Seamless Remote Approvals (Antigravity IDE)
 
 When using **Google Antigravity IDE**:
-1. When you first run a command, Antigravity may show its built-in desktop security prompt alongside Discord.
-2. Select **`4. Yes, and always allow`** (or enable **Auto-approve terminal execution** in `Settings ➔ Agent Permissions`).
-3. **Discord Agent Gate remains active in the background**: It will intercept all commands and questions, making Discord your single, exclusive remote approval gate when you are away from your PC.
+1. Click the **⚙️ Settings (Gear icon)** at the bottom-left of the Antigravity sidebar.
+2. Under **Agent / Terminal Permissions**, enable **Auto-approve terminal execution** (or set permission mode to *Unattended / Auto-allow*).
+3. **Discord Agent Gate remains active in the background**: It will intercept all commands and questions before they run, making Discord your single, exclusive remote approval gate on your phone when you are away from your PC.
 
 ---
 
