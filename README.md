@@ -121,6 +121,18 @@ Add to `~/.claude/settings.json`:
 
 ---
 
+## 🗑️ Uninstallation
+
+If you ever want to remove Discord Agent Gate and restore your agents to their default terminal behavior, just run:
+
+```bash
+python uninstall.py
+```
+
+This cleanly removes the hook configurations from Antigravity (`hooks.json`) and Claude Code (`settings.json`) without affecting any of your other custom configurations.
+
+---
+
 ## 🔄 Running the Daemon in the Background
 
 ### Option A: Using PM2 (Recommended)
