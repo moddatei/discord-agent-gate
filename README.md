@@ -143,15 +143,30 @@ python codex_helper.py "git push origin main"
 
 ---
 
-## 🗑️ Uninstallation
+## 💡 Setting Up Seamless Remote Approvals (Antigravity IDE)
 
-If you ever want to remove Discord Agent Gate and restore your agents to their default terminal behavior, just run:
+When using **Google Antigravity IDE**:
+1. When you first run a command, Antigravity may show its built-in desktop security prompt alongside Discord.
+2. Select **`4. Yes, and always allow`** (or enable **Auto-approve terminal execution** in `Settings ➔ Agent Permissions`).
+3. **Discord Agent Gate remains active in the background**: It will intercept all commands and questions, making Discord your single, exclusive remote approval gate when you are away from your PC.
 
-```bash
-python uninstall.py
-```
+---
 
-This cleanly removes the hook configurations from Antigravity (`hooks.json`), Claude Code (`settings.json`), and Codex/custom setups without affecting any of your other custom configurations.
+## 🗑️ Uninstallation & Restoring Defaults
+
+If you ever want to remove Discord Agent Gate and restore your agents to standard desktop behavior:
+
+1. **Remove Discord Gate hooks**:
+   ```bash
+   python uninstall.py
+   ```
+   This cleanly removes the hook configurations from Antigravity (`hooks.json`), Claude Code (`settings.json`), and Codex/custom setups.
+
+2. **Restore Antigravity desktop screen prompts**:
+   In Antigravity IDE, go to:
+   > **Settings (Gear Icon) ➔ Agent Permissions ➔ Reset All Permissions**
+
+Your agents will immediately return 100% to their factory desktop prompt behavior.
 
 ---
 
