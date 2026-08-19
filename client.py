@@ -28,7 +28,18 @@ def extract_payload(agent_type: str, raw_data: dict) -> dict:
     if agent_type == "antigravity":
         tool_call = raw_data.get("toolCall", {})
         tool_name = tool_call.get("name", "Tool")
-        args_str = json.dumps(tool_call.get("args", {}), indent=2)
+        args = tool_call.get("args", {})
+        if tool_name == "ask_question" and "questions" in args:
+            lines = []
+            for q in args["questions"]:
+                lines.append(f"❓ {q.get('question', '')}")
+                for opt in q.get("options", []):
+                    lines.append(f"  • {opt}")
+            args_str = "\n".join(lines)
+        elif tool_name == "run_command" and "CommandLine" in args:
+            args_str = f"$ {args['CommandLine']}"
+        else:
+            args_str = json.dumps(args, indent=2)
         workspaces = raw_data.get("workspacePaths", [])
         if workspaces:
             workspace = str(workspaces[0])
@@ -50,7 +61,7 @@ def extract_payload(agent_type: str, raw_data: dict) -> dict:
         "workspace": workspace
     }
 
-def format_output(agent_type: str, daemon_response: dict) -> dict:
+def format_output(agent_type: str, daemon_response: dict, raw_data: dict) -> dict:
     decision = daemon_response.get("decision", "deny")
     reason = daemon_response.get("reason", "")
 
@@ -60,10 +71,20 @@ def format_output(agent_type: str, daemon_response: dict) -> dict:
             "message": reason
         }
     elif agent_type == "antigravity":
-        return {
+        output = {
             "decision": decision,  # "allow" | "deny"
             "reason": reason
         }
+        if decision == "allow":
+            tool_call = raw_data.get("toolCall", {})
+            name = tool_call.get("name", "")
+            args = tool_call.get("args", {})
+            overrides = []
+            if name == "run_command" and "CommandLine" in args:
+                overrides.append(f"command({args['CommandLine']})")
+            if overrides:
+                output["permissionOverrides"] = overrides
+        return output
     else:
         return {
             "decision": decision,
@@ -103,7 +124,7 @@ def main():
             "reason": f"Bridge error: {str(e)}"
         }
 
-    output = format_output(args.agent, daemon_res)
+    output = format_output(args.agent, daemon_res, raw_data)
     print(json.dumps(output))
 
 if __name__ == "__main__":

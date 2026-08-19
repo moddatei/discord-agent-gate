@@ -86,7 +86,7 @@ Add to `.agents/hooks.json` or `~/.gemini/config/hooks.json`:
   "discord-remote-gate": {
     "PreToolUse": [
       {
-        "matcher": "run_command|write_to_file|replace_file_content",
+        "matcher": "ask_question|run_command",
         "hooks": [
           {
             "type": "command",
@@ -98,6 +98,12 @@ Add to `.agents/hooks.json` or `~/.gemini/config/hooks.json`:
   }
 }
 ```
+
+#### Sensitivity Matcher Options:
+- `"ask_question|run_command"` *(Recommended)*: Pings Discord only on interactive questions/forms and terminal commands. Normal file editing remains silent.
+- `"ask_question"`: Pings Discord only when the agent explicitly asks a multiple-choice question or confirmation form.
+- `"run_command"`: Pings Discord only when terminal commands are about to execute.
+- `"run_command|write_to_file|replace_file_content"`: Full gate on all file edits and commands.
 
 ### Claude Code
 Add to `~/.claude/settings.json`:

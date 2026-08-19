@@ -84,10 +84,14 @@ async def verify_discord(token: str, channel_id: int):
             await client.close()
     return success
 
-def configure_antigravity():
+def get_runner_cmd(agent: str) -> str:
+    client_script = (REPO_ROOT / "client.py").as_posix()
+    py_bin = "python" if sys.platform == "win32" else "python3"
+    return f'{py_bin} {client_script} --agent {agent}'
+
+def configure_antigravity(matcher: str = "ask_question|run_command"):
     print_header("Configuring Google Antigravity (AGY)")
-    client_script = REPO_ROOT / "client.py"
-    cmd_str = f'"{PYTHON_EXE}" "{client_script}" --agent antigravity'
+    cmd_str = get_runner_cmd("antigravity")
 
     # Global config location for Antigravity: ~/.gemini/config/hooks.json
     global_dir = Path.home() / ".gemini" / "config"
@@ -104,7 +108,7 @@ def configure_antigravity():
     data["discord-remote-gate"] = {
         "PreToolUse": [
             {
-                "matcher": "run_command|write_to_file|replace_file_content",
+                "matcher": matcher,
                 "hooks": [
                     {
                         "type": "command",
@@ -116,12 +120,11 @@ def configure_antigravity():
     }
 
     hooks_file.write_text(json.dumps(data, indent=2), encoding="utf-8")
-    print(f"✅ Antigravity hooks updated: {hooks_file}")
+    print(f"✅ Antigravity hooks updated with matcher '{matcher}': {hooks_file}")
 
 def configure_claude_code():
     print_header("Configuring Claude Code")
-    client_script = REPO_ROOT / "client.py"
-    cmd_str = f'"{PYTHON_EXE}" "{client_script}" --agent claude'
+    cmd_str = get_runner_cmd("claude")
 
     # Claude settings location: ~/.claude/settings.json
     claude_dir = Path.home() / ".claude"
@@ -167,7 +170,22 @@ def main():
         except Exception as e:
             print(f"Test skipped or failed: {e}")
 
-    print_header("Step 3: Select AI Agents to Auto-Configure")
+    print_header("Step 3: Select Notification Sensitivity")
+    print("1) Questions & Terminal Commands (Recommended: ask_question | run_command)")
+    print("2) Questions & Forms Only (ask_question)")
+    print("3) Terminal Commands Only (run_command)")
+    print("4) Full Guard (All file edits & commands)")
+    
+    mode_choice = input("Select sensitivity mode [1]: ").strip()
+    matchers = {
+        "1": "ask_question|run_command",
+        "2": "ask_question",
+        "3": "run_command",
+        "4": "run_command|write_to_file|replace_file_content"
+    }
+    selected_matcher = matchers.get(mode_choice, "ask_question|run_command")
+
+    print_header("Step 4: Select AI Agents to Auto-Configure")
     print("1) Google Antigravity (AGY)")
     print("2) Claude Code")
     print("3) Both Antigravity and Claude Code")
@@ -175,11 +193,11 @@ def main():
     
     choice = input("Select an option [3]: ").strip()
     if choice in ("1",):
-        configure_antigravity()
+        configure_antigravity(selected_matcher)
     elif choice in ("2",):
         configure_claude_code()
     elif choice in ("", "3"):
-        configure_antigravity()
+        configure_antigravity(selected_matcher)
         configure_claude_code()
     else:
         print("Skipped agent auto-configuration.")
