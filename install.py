@@ -188,17 +188,21 @@ def main():
     print_header("Step 4: Select AI Agents to Auto-Configure")
     print("1) Google Antigravity (AGY)")
     print("2) Claude Code")
-    print("3) Both Antigravity and Claude Code")
-    print("4) Skip (Manual setup)")
+    print("3) OpenAI Codex / Custom Agents")
+    print("4) All of the above (Antigravity + Claude Code + Codex)")
+    print("5) Skip (Manual setup)")
     
-    choice = input("Select an option [3]: ").strip()
+    choice = input("Select an option [4]: ").strip()
     if choice in ("1",):
         configure_antigravity(selected_matcher)
     elif choice in ("2",):
         configure_claude_code()
-    elif choice in ("", "3"):
+    elif choice in ("3",):
+        print("✅ Codex & Custom Agent Helper ready in 'codex_helper.py'.")
+    elif choice in ("", "4"):
         configure_antigravity(selected_matcher)
         configure_claude_code()
+        print("✅ Codex & Custom Agent Helper ready in 'codex_helper.py'.")
     else:
         print("Skipped agent auto-configuration.")
 

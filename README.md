@@ -123,6 +123,22 @@ Add to `~/.claude/settings.json`:
     ]
   }
 }
+### OpenAI Codex & Custom Agents
+For custom agent loops (OpenAI, LangChain, AutoGen, CrewAI), use `codex_helper.py`:
+
+```python
+from codex_helper import is_approved
+
+# Gate any tool or command execution through Discord:
+if is_approved(tool_name="bash", args={"command": "npm run deploy"}, agent="CODEX"):
+    print("Action approved via Discord!")
+else:
+    print("Declined or timed out.")
+```
+
+Or gate any shell command directly from CLI:
+```bash
+python codex_helper.py "git push origin main"
 ```
 
 ---
